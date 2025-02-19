@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container  d-flex justify-content-center  gap-3 mt-5">
+    <a href="{% url 'add_person' %}" class="sb">Add Person</a>
+    <button id="startVideoBtn" class="sb">Start Video Stream</button>
+</div>
+
+<div id="videoSection" class="mt-4 text-center" style="display: none;">
+    <div class="d-flex justify-content-center">
+        <img id="videoStream" src="" class="img-fluid shadow-lg rounded mb-4" alt="Video Stream">
+    </div>
+</div>
+
+<script>
+    document.getElementById("startVideoBtn").addEventListener("click", function() {
+        document.getElementById('videoSection').style.display = 'block';
+        document.getElementById("videoStream").src = "{% url 'video_stream' %}";
+    });
+</script>
+{% endblock content %}

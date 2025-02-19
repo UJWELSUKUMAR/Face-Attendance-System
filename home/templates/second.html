@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container p-3 shadow-lg my-5 rounded" style="background-color: #A1D6E2;">
+    <div class="container p-5 bg-light rounded">
+        <h1 class="text-center">Enter Details</h1>
+        <hr>
+
+        {% if messages %} 
+            <div> 
+                {% for message in messages %} 
+                    <div class="alert alert-success alert-dismissible fade show" role="alert"> 
+                        <strong>{{ message }}</strong> 
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button> 
+                    </div> 
+                {% endfor %}     
+            </div> 
+        {% endif %}
+
+        <!-- Add form -->
+        <form method="POST" action="{% url 'add_person' %}"> 
+            {% csrf_token %}
+
+            <div class="input-group mb-3">
+                <span class="input-group-text" id="inputGroup-sizing-default">Name</span>
+                <input type="text" class="form-control" name="name" required autocomplete="off">
+            </div>
+
+            <div class="mb-3"> 
+                <label for="image" class="form-label">Image</label>
+                <div id="camera-container" class="mb-3">
+                    <video id="video" width="320" height="240" autoplay></video>
+                    <button type="button" id="capture-btn" class="btn btn-success mx-3" style="margin-bottom:30px;">Capture</button>
+                    <canvas id="canvas" width="320" height="240"></canvas>
+                    <p class="text-muted mt-2">Click "Capture" to take an image. Click again to retake the image.</p>
+                </div>
+                <input type="hidden" id="image-data" name="image" required>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+
+    </div>
+</div>
+
+<script> 
+    const video = document.getElementById('video');
+    const canvas = document.getElementById('canvas');
+    const captureBtn = document.getElementById('capture-btn');
+    const imageDataInput = document.getElementById('image-data');
+    
+    navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => { video.srcObject = stream; })
+        .catch(err => { console.error('Error accessing the camera: ', err); });
+
+    captureBtn.addEventListener('click', () => { 
+        const context = canvas.getContext('2d'); 
+        context.drawImage(video, 0, 0, canvas.width, canvas.height);
+        const imageDataURL = canvas.toDataURL('image/png');
+        imageDataInput.value = imageDataURL; 
+    });
+
+    document.querySelector('form').addEventListener('submit', (event) => {
+        if (!imageDataInput.value) {
+            event.preventDefault(); 
+            alert('Please capture an image before submitting.');
+        }
+    });
+</script>
+
+{% endblock content %}

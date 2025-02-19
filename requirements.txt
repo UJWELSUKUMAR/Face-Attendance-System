@@ -1,0 +1,10 @@
+django
+opencv-python
+mtcnn
+keras-facenet
+tensorflow
+scipy
+yoloface
+ipython
+pandas
+openpyxl
